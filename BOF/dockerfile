@@ -1,0 +1,21 @@
+FROM debian:stable-slim
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      socat && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY vuln /usr/local/sbin/vuln
+RUN chmod 0755 /usr/local/sbin/vuln
+
+COPY flag.txt /root/flag.txt
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 1337
+
+USER root
+WORKDIR /
+
+ENTRYPOINT ["/entrypoint.sh"]
